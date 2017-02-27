@@ -1,5 +1,5 @@
 # coding:utf-8
-# Deep MNIST for Experts
+# Deep MNIST for Experts：使用卷积神经网络模型解决MNIST问题
 # https://www.tensorflow.org/versions/r0.12/tutorials/mnist/pros
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data

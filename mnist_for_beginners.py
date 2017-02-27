@@ -1,5 +1,5 @@
 # coding:utf-8
-# MNIST For ML Beginners
+# MNIST For ML Beginners：：使用全连接神经网络模型解决MNIST问题
 # https://www.tensorflow.org/versions/r0.12/tutorials/mnist/beginners
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
