@@ -27,7 +27,7 @@ sess=tf.Session()
 #
 # 返回值 'result' 是一个 numpy `ndarray` 对象.
 result=sess.run(product)
-print result
+print(result)
 
 # 任务完成, 关闭会话.
 sess.close()
@@ -48,10 +48,10 @@ init_op=tf.global_variables_initializer()
 # 启动图, 运行 op
 with tf.Session() as sess:
     sess.run(init_op) # 初始化变量
-    print sess.run(state)
+    print(sess.run(state))
     for i in range(3):
         sess.run(update)
-        print sess.run(state)
+        print(sess.run(state))
 
 
 # Feed
@@ -60,6 +60,6 @@ input2=tf.placeholder(tf.float32)
 output=tf.multiply(input1,input2)
 
 with tf.Session() as sess:
-    print sess.run([output],feed_dict={input1:[7.],input2:[2.]})
+    print(sess.run([output],feed_dict={input1:[7.],input2:[2.]}))
 
 

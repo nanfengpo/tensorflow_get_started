@@ -68,11 +68,12 @@ train_step=tf.train.AdamOptimizer(1e-4).minimize(loss)
 correct_prediction=tf.equal(tf.argmax(y_conv,1),tf.argmax(y_,1))
 accuracy=tf.reduce_mean(tf.cast(correct_prediction,tf.float32))
 
+# 设置TensorBoard
+tf.summary.scalar("accuracy",accuracy)
+merged=tf.summary.merge_all()
+tb_writer=tf.summary.FileWriter("TensorBoard/")
+
 with tf.Session() as sess:
-    # 设置TensorBoard
-    tf.summary.scalar("accuracy",accuracy)
-    merged=tf.summary.merge_all()
-    tb_writer=tf.summary.FileWriter("TensorBoard/",graph=sess.graph)
     sess.run(tf.global_variables_initializer())
     for i in range(2000):
         batch=mnist.train.next_batch(50)
