@@ -1,4 +1,3 @@
-# coding:utf-8
 # Deep MNIST for Experts：使用卷积神经网络模型解决MNIST问题
 # https://www.tensorflow.org/versions/r0.12/tutorials/mnist/pros
 import tensorflow as tf
@@ -6,34 +5,10 @@ from tensorflow.examples.tutorials.mnist import input_data
 mnist=input_data.read_data_sets('MNIST_data/',one_hot=True)
 
 # Start TensorFlow InteractiveSession
-sess=tf.InteractiveSession()
-
 
 x=tf.placeholder(tf.float32,shape=[None,784])
 y_=tf.placeholder(tf.float32,shape=[None,10])
 
-'''
-# 使用全连接模型预测
-W=tf.Variable(tf.zeros([784,10]))
-b=tf.Variable(tf.zeros([10]))
-
-sess.run(tf.global_variables_initializer())
-
-y=tf.nn.softmax(tf.matmul(x, W)+b)
-
-loss=tf.reduce_mean(-tf.reduce_sum(y_*tf.log(y),reduction_indices=[1]))
-# loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_))
-train_step=tf.train.GradientDescentOptimizer(0.01).minimize(loss)
-
-for i in range(1000):
-    batch=mnist.train.next_batch(100)
-    train_step.run(feed_dict={x:batch[0],y_:batch[1]})
-    correct_prediction=tf.equal(tf.argmax(y,1),tf.argmax(y_,1))
-    accuracy=tf.reduce_mean(tf.cast(correct_prediction,tf.float32))
-    if i%50 ==0 :
-        print(accuracy.eval(feed_dict={x:mnist.test.images,\
-                                       y_:mnist.test.labels}))
-'''
 # to Build a Multilayer Convolutional Network, create weights and biases
 def weight_variable(shape):
     initial=tf.truncated_normal(shape,stddev=0.1)
@@ -92,16 +67,22 @@ loss=tf.reduce_mean(-tf.reduce_sum(y_*tf.log(y_conv),reduction_indices=[1]))
 train_step=tf.train.AdamOptimizer(1e-4).minimize(loss)
 correct_prediction=tf.equal(tf.argmax(y_conv,1),tf.argmax(y_,1))
 accuracy=tf.reduce_mean(tf.cast(correct_prediction,tf.float32))
-sess.run(tf.global_variables_initializer())
-for i in range(20000):
-    batch=mnist.train.next_batch(50)
-    if i%100 ==0:
-        train_accuracy=accuracy.eval(feed_dict={x:batch[0],\
-                y_:batch[1],keep_prob:1.0})
-        print("step %d, training accuracy %g" %(i,train_accuracy))
-    train_step.run(feed_dict={x:batch[0],\
-                y_:batch[1],keep_prob:0.5})
-print("test accuracy %g" % accuracy.eval(feed_dict={x:batch[0],\
+
+with tf.Session() as sess:
+    # 设置TensorBoard
+    tf.summary.scalar("accuracy",accuracy)
+    merged=tf.summary.merge_all()
+    tb_writer=tf.summary.FileWriter("TensorBoard/",graph=sess.graph)
+    sess.run(tf.global_variables_initializer())
+    for i in range(2000):
+        batch=mnist.train.next_batch(50)
+        sess.run(train_step,feed_dict={x:batch[0],y_:batch[1],keep_prob:0.5})
+        if i%100 ==0:
+            # train_accuracy=sess.run(accuracy,feed_dict={x:batch[0],y_:batch[1],keep_prob:1.0})
+            # print("step %d, training accuracy %g" %(i,train_accuracy))
+            result=sess.run(merged,feed_dict={x:batch[0],y_:batch[1],keep_prob:1.0})
+            tb_writer.add_summary(result,i)
+    print("test accuracy %g" % sess.run(accuracy,feed_dict={x:batch[0],\
                 y_:batch[1],keep_prob:1.0}))
 
 
