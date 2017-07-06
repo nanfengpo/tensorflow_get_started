@@ -1,4 +1,10 @@
+
 # coding:utf-8
+'''
+【目的】
+    由特征X和标签y，得到参数W和b
+'''
+
 import tensorflow as tf
 import numpy as np
 

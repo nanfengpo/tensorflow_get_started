@@ -79,10 +79,13 @@ with tf.Session() as sess:
         batch=mnist.train.next_batch(50)
         sess.run(train_step,feed_dict={x:batch[0],y_:batch[1],keep_prob:0.5})
         if i%100 ==0:
-            # train_accuracy=sess.run(accuracy,feed_dict={x:batch[0],y_:batch[1],keep_prob:1.0})
-            # print("step %d, training accuracy %g" %(i,train_accuracy))
+            train_accuracy=sess.run(accuracy,feed_dict={x:batch[0],y_:batch[1],keep_prob:1.0})
+            print("step %d, training accuracy %g" %(i,train_accuracy))
+            '''
+            # 使用TensorBoard来监视准确度：在相同目录下，执行`tensorboard --logdir=TensorBoard`
             result=sess.run(merged,feed_dict={x:batch[0],y_:batch[1],keep_prob:1.0})
             tb_writer.add_summary(result,i)
+            '''
     print("test accuracy %g" % sess.run(accuracy,feed_dict={x:batch[0],\
                 y_:batch[1],keep_prob:1.0}))
 
